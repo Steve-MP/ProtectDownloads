@@ -1,10 +1,8 @@
-Bolt Extension Starter
-======================
+Password Protected File Downloads
+=================================
 
-A starter skeleton for a Bolt Extension
+A single-use extension designed to protect uploaded files behind a configurable password.
 
-To get going run the following command, replacing the last argument with the name of your extension:
+This is a work in progress and should be used in production!
 
-`composer create-project --no-install bolt/bolt-extension-starter <newextname>`  
-
-For more information, see this page in the Bolt documentation: https://docs.bolt.cm/extensions/config 
+Let's be honest, at the moment it doesn't do anything, so if you try to use it, nothing will happen anyway!
