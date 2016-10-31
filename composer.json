@@ -1,0 +1,31 @@
+{
+    "name": "SteveEMBO/ProtectDownloads",
+    "description": "Add password protection to abstract book downloads.",
+    "type": "bolt-extension",
+    "keywords" : [ "password", "downloads" ],
+    "require": {
+        "bolt/bolt": ">=2.0.0,<3.0.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steve", 
+            "email": "pewter@embo.org"
+        }
+    ],
+	"minimum-stability" : "dev",
+	"prefer-stable" : true,
+    "autoload": {
+        "files": [
+            "init.php"
+        ],
+        "psr-4": {
+            "Bolt\\Extension\\SteveEMBO\\ProtectDownloads\\": "",
+            "Bolt\\Extension\\SteveEMBO\\ProtectDownloads\\Tests\\": "tests"
+        }
+    },
+    
+    "extra": {
+        "bolt-assets": "assets"
+    }
+}
