@@ -1,0 +1,16 @@
+# This file contains configuration for the Password Protect Downloads extension.
+# It tells the extension which fields contain the filepath to be downloaded and 
+# the password to authorise the download.
+
+# For example:
+# event:
+# 	filepathfield: downloadableFile
+# 	passwordfield: downloadPassword
+
+# This tells the extension that, when the event type is "event", the file to be
+# downloaded is located in the field "downloadableFile" (configured in your 
+# contenttypes.yaml file) and the password to
+# check against is in the field "downloadPassword"
+event:
+    filepathfield: abstractbook
+    passwordfield: downloadpassword
