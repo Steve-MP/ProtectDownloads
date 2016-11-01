@@ -42,7 +42,6 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			//get Filename and Password from record
 			$details = $this->getFilepathAndPasswordFromRecord($type, $id);
 
-
 			//if passwordfield is empty, just download the document
 			if(empty(trim($details['password']))){ 
 
@@ -52,7 +51,8 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 				//create password form
 				$form = $this->generateForm();
 				//return password entry form to user
-				return $this->app['twig']->render('downloadPassword.twig',array('form' => $form));
+				$this->app['twig.loader.filesystem']->addPath(dirname(__DIR__));
+				return $this->app['twig']->render('assets/downloadPassword.twig',array('form' => $form, 'record'=>$this->record));
 
 			}
 			return;
@@ -74,7 +74,11 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			if($realPassword==$submittedPassword){
 				return $this->returnFile($details['filepath']);
 			}else{
-				return $this->app['twig']->render('downloadPassword.twig',array('form' => $this->generateForm()));
+				//create password form
+				$form = $this->generateForm();
+				//return password entry form to user
+				$this->app['twig.loader.filesystem']->addPath(dirname(__DIR__));
+				return $this->app['twig']->render('assets/downloadPassword.twig',array('form' => $form, 'record'=>$this->record, 'error' => 'Incorrect Password'));
 			}
 
 			return;
