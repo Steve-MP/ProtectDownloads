@@ -74,11 +74,17 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			if($realPassword==$submittedPassword){
 				return $this->returnFile($details['filepath']);
 			}else{
+				//check number of download attempts
+				$attempts = $this->sessionCheck();
+				if($attempts==false){
+					$this->app->redirect($this->record->link());
+				}
+
 				//create password form
 				$form = $this->generateForm();
 				//return password entry form to user
 				$this->app['twig.loader.filesystem']->addPath(dirname(__DIR__));
-				return $this->app['twig']->render('assets/downloadPassword.twig',array('form' => $form, 'record'=>$this->record, 'error' => 'Incorrect Password'));
+				return $this->app['twig']->render('assets/downloadPassword.twig',array('form' => $form, 'record'=>$this->record, 'error' => 'Incorrect Password', 'attempts'=>$attempts));
 			}
 
 			return;
@@ -145,6 +151,33 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			$downloadPassword = $this->record->$downloadPasswordField();
 
 			return array('filepath'=>$downloadFilepath, 'password' => $downloadPassword);
+
+
+	}
+
+	protected function sessionCheck()
+	{
+		// get reference to session handler
+		$sesh = $this->app['session']; 
+
+		// if no download counter in session, create one
+		if(!$sesh->get('downloadCount')){
+			$sesh->set('downloadCount', 1);
+		}else{
+			//if download count exists increment by 1
+			$sesh->set('downloadCount', $sesh->get('downloadCount') + 1);
+		}
+
+
+		// if more than three tries, return a fail
+		if($sesh->get('downloadCount')>3){
+
+			$sesh->set('downloadCount',1);
+			return false;
+		}
+
+		return $sesh->get('downloadCount');
+		
 
 
 	}

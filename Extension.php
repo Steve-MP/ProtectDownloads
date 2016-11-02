@@ -24,7 +24,7 @@ class Extension extends BaseExtension
     	//get the base url for this site
     	$baseUrl = $this->app["resources"]->getUrl("rooturl");
     	//generate the download link
-    	$link = $baseUrl . 'getFile/'. $type . '/' . $recordId;
+    	$link = $baseUrl . 'getfile/'. $type . '/' . $recordId;
     	
     	return $link;
 
