@@ -74,10 +74,11 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			if($realPassword==$submittedPassword){
 				return $this->returnFile($details['filepath']);
 			}else{
-				//check number of download attempts
+				//check number of download attempts and redirect back to original
+				//page if more than 3 (just to throw a problem in the way of automated attacks)
 				$attempts = $this->sessionCheck();
 				if($attempts==false){
-					$this->app->redirect($this->record->link());
+					return $this->app->redirect($this->record->link());
 				}
 
 				//create password form
@@ -172,7 +173,7 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 		// if more than three tries, return a fail
 		if($sesh->get('downloadCount')>3){
 
-			$sesh->set('downloadCount',1);
+			$sesh->remove('downloadCount');
 			return false;
 		}
 
