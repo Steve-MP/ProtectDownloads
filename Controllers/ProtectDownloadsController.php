@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use \Exception;
+use Bolt\Extension\SteveEMBO\ProtectDownloads\Services\ChunkedDownloader;
 
 class ProtectDownloadsController implements ControllerProviderInterface{
 
@@ -45,7 +46,8 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			//if passwordfield is empty, just download the document
 			if(empty(trim($details['password']))){ 
 
-				return $this->returnFile($details['filepath']);
+				// use Symfony file streamer to download in chunks and avoid eating all server memory
+				return (new ChunkedDownloader($this->app, $details['filepath']))->chunkIt();
 
 			}else{
 				//create password form
@@ -72,7 +74,11 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			$realPassword = $details['password'];
 
 			if($realPassword==$submittedPassword){
-				return $this->returnFile($details['filepath']);
+
+				// use Symfony file streamer to download in chunks and avoid eating all server memory
+				return (new ChunkedDownloader($this->app, $details['filepath']))->chunkIt();
+
+
 			}else{
 				//check number of download attempts and redirect back to original
 				//page if more than 3 (just to throw a problem in the way of automated attacks)
@@ -94,30 +100,6 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 		});
 
 		return $protectDownloads;
-	}
-
-	/**
-	 * Protected function that handles the actual download of the file
-	 * @param  strin $fileName The fully qualified file path of the file
-	 * @return BinaryFileResponse The data to return to the user's browser
-	 */
-	protected function returnFile($fileName)
-	{
-
-		//check that filepath exists
-		if(!$fileName) throw new Exception("Attempted to run returnFile without giving a file path!");
-
-		//construct full filepath
-		$fullDownloadPath = $this->app['resources']->getPath("filespath") . DIRECTORY_SEPARATOR . $fileName;
-				
-		//check that file exists
-		if(!file_exists($fullDownloadPath)) throw new Exception("You tried to download a file that doesn't exist");
-
-		//Download the file
-		$response = new BinaryFileResponse($fullDownloadPath);
-		$response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
-
-		return $response;
 	}
 
 
