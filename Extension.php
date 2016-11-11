@@ -10,7 +10,7 @@ class Extension extends BaseExtension
 {
     public function initialize()
     {
-        //when user navigates to /getfile/record_id, use the ProtectDownloadsController to fetch the downloadable file for this record
+        //when user navigates to /getfile/type/record_id, use the ProtectDownloadsController to fetch the downloadable file for this record
     	$this->app->mount('/getfile/{type}/{id}', new ProtectDownloadsController($this->config));
 
     	//define new Twig function to create password protected download link
