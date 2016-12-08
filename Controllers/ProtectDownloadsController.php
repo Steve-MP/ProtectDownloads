@@ -133,6 +133,10 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			$downloadFilepath = $this->record->$downloadFileNameField();
 			$downloadPassword = $this->record->$downloadPasswordField();
 
+			//if there is no file for this record, throw an error
+			if(empty(trim($downloadFilepath))) throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('There is no file to download');
+
+
 			return array('filepath'=>$downloadFilepath, 'password' => $downloadPassword);
 
 
