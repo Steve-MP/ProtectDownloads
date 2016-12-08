@@ -47,7 +47,7 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			if(empty(trim($details['password']))){ 
 
 				// use Symfony file streamer to download in chunks and avoid eating all server memory
-				return (new ChunkedDownloader($this->app, $details['filepath']))->chunkIt();
+				(new ChunkedDownloader($this->app, $details['filepath']))->chunkIt();
 
 			}else{
 				//create password form
@@ -76,7 +76,7 @@ class ProtectDownloadsController implements ControllerProviderInterface{
 			if($realPassword==$submittedPassword){
 
 				// use Symfony file streamer to download in chunks and avoid eating all server memory
-				return (new ChunkedDownloader($this->app, $details['filepath']))->chunkIt();
+				(new ChunkedDownloader($this->app, $details['filepath']))->chunkIt();
 
 
 			}else{

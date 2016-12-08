@@ -33,12 +33,39 @@ class ChunkedDownloader {
 		//check if there is a real file at this location
 		if(!file_exists($filepath)) throw new Exception("You have attempted to download a file that doesn't exist at the given location");
 
-		//return streamed file
-		return new StreamedResponse(
-		    function () use ($filepath) {
-		        readfile($filepath);
-		    }, 200, array('Content-Type' => 'application/pdf')
-		); 
+		//define output stream
+		$myStream =  new StreamedResponse();
+
+		//set the callback function that chunks the data
+		$myStream->setCallback(function () use ($filepath) {
+
+		        //readfile($filepath);
+		        $chunkSize = 1024 * 1024;
+		        $handle = fopen($filepath, 'rb');
+		        while(!feof($handle)){
+
+		        	$buff = fread($handle, $chunkSize);
+		        	echo $buff;
+		        	ob_flush();
+		        	flush();
+
+		        }//end of while
+
+		        //close filestream
+		        fclose($handle);
+		        exit;
+		    
+		    });
+		//set status code
+		$myStream->setStatusCode(200);
+
+		//add content type
+		$myStream->headers->add(array('Content-Type' => 'application/pdf'));
+
+		//return the streamed response object
+		$myStream ->send();
+
+
 	}
 
 
